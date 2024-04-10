@@ -1,0 +1,48 @@
+tasks:
+  - init: |
+      docker pull container-registry.oracle.com/database/adb-free:latest
+
+      # open the readme.md document in VS code.
+      gp open README.md
+
+      docker run -d 
+        -p 1521:1522 \
+        -p 1522:1522 \
+        -p 8443:8443 \
+        -p 27017:27017 \
+        -e WORKLOAD_TYPE=ATP \
+        -e WALLET_PASSWORD='Welkom01#123' \
+        -e ADMIN_PASSWORD='Welkom01#123' \
+        --cap-add SYS_ADMIN \
+        --device /dev/fuse \
+        --name adb-free \
+        container-registry.oracle.com/database/adb-free:latest 
+      gp sync-done database-running
+
+  - name: start container and run a session as postgres owner
+    init: gp sync-await database-running
+    command: |
+      docker start adb-free 
+
+  - name: Show log
+    command: docker log -f adb-free
+
+
+ports:
+  - port: 1521
+    onOpen: notify
+    visibility: private
+  - port: 1522
+    onOpen: ignore
+    visibility: private
+  - port: 8443
+    onOpen: notify
+    visibility: private
+  - port: 27017
+    onOpen: notify
+    visibility: private
+
+vscode:
+  extensions:
+    - ms-dotnettools.vscode-dotnet-runtime
+    - oracledevtools
