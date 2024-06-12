@@ -31,7 +31,7 @@ tasks:
       rm -f mongodb-mongosh_2.2.6_amd64.deb
 
       echo "Waiting for database to settle..."
-      sleep 120
+      sleep 150
 
       # copy cloud wallet and create a zip file for it.
       docker cp adb-free:/u01/app/oracle/wallets/tls_wallet adb_wallet
