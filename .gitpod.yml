@@ -1,6 +1,8 @@
 tasks:
   - name: download and create container
-    before: |
+    init: |
+      gp open README.md
+
       # pull and start container:
       docker pull container-registry.oracle.com/database/adb-free:latest-23ai
       docker run -d \
@@ -19,13 +21,18 @@ tasks:
       gp sync-done create-container
 
       # fetch SQLcl
-      curl --output sqlcl-latest.zip https://download.oracle.com/otn_software/java/sqldeveloper/sqlcl-latest.zip
+      wget https://download.oracle.com/otn_software/java/sqldeveloper/sqlcl-latest.zip
       unzip sqlcl-latest.zip -d /workspace/
       rm -f sqlcl-latest.zip
 
-      # wait until container is ready, this message is relatively late after initialization
+      wget -qO- https://www.mongodb.org/static/pgp/server-7.0.asc | sudo tee /etc/apt/trusted.gpg.d/server-7.0.asc
+      wget https://downloads.mongodb.com/compass/mongodb-mongosh_2.2.6_amd64.deb
+      sudo dpkg -i mongodb-mongosh_2.2.6_amd64.deb
+      rm -f mongodb-mongosh_2.2.6_amd64.deb
+
+      echo "Waiting for database to settle..."
       sleep 120
-      
+
       # copy cloud wallet and create a zip file for it.
       docker cp adb-free:/u01/app/oracle/wallets/tls_wallet adb_wallet
       pushd adb_wallet && zip ../adb.zip * && popd
@@ -34,14 +41,11 @@ tasks:
       /workspace/sqlcl/bin/sql -cloudconfig adb.zip admin/Welkom01#123@myatp_tp @ scripts/create_schema.sql
 
       gp sync-done database-running
-    init:
-      gp open README.md
 
-
-  - name: start container and run a session as  owner
+  - name: start container
     init: gp sync-await database-running
     command: |
-      docker start adb-free 
+      docker start adb-free
 
   - name: Show log
     init: gp sync-await create-container
@@ -49,17 +53,17 @@ tasks:
 
 ports:
   - port: 1521
-    onOpen: notify
+    onOpen: ignore
     visibility: private
   - port: 1522
     onOpen: ignore
     visibility: private
   - port: 8443
-    onOpen: notify
+    onOpen: ignore
     visibility: private
     protocol: https
   - port: 27017
-    onOpen: notify
+    onOpen: ignore
     visibility: private
 
 vscode:

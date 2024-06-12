@@ -9,4 +9,4 @@ end;
 
 exit
 
--- mongodb://apptest:Welkom01x123@localhost:27017/apptest?authMechanism=PLAIN&authSource=$external&ssl=true&retryWrites=false&loadBalanced=true
+-- mongodb://apptest:Welkom01x123@localhost:27017/apptest?authMechanism=PLAIN&authSource=$external&ssl=true&retryWrites=false&loadBalanced=true&tlsInsecure=true
