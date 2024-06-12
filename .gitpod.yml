@@ -22,7 +22,7 @@ tasks:
       rm -f sqlcl-latest.zip
 
       # wait until container is ready, this message is relatively late after initialization
-      docker logs -f adb-free 2>&1 | grep -q 'Oracle REST Data Services initialized'
+      sleep 120
       
       # copy cloud wallet and create a zip file for it.
       docker cp adb-free:/u01/app/oracle/wallets/tls_wallet adb_wallet
