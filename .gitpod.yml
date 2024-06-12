@@ -15,6 +15,8 @@ tasks:
         --device /dev/fuse \
         --name adb-free \
         container-registry.oracle.com/database/adb-free:latest-23ai
+      
+      gp sync-done create-container
 
       # fetch SQLcl
       curl --output sqlcl-latest.zip https://download.oracle.com/otn_software/java/sqldeveloper/sqlcl-latest.zip
@@ -42,7 +44,7 @@ tasks:
       docker start adb-free 
 
   - name: Show log
-    init: gp sync-await database-running
+    init: gp sync-await create-container
     command: docker logs -f adb-free
 
 ports:
