@@ -42,6 +42,9 @@ tasks:
 
       gp sync-done database-running
 
+      # Fill in schema apptest:
+      /workspace/sqlcl/bin/sql -cloudconfig adb.zip apptest/Welkom01x123@myatp_tp @ scripts/apptest_objects.sql
+
   - name: start container
     init: gp sync-await database-running
     command: |
@@ -50,6 +53,16 @@ tasks:
   - name: Show log
     init: gp sync-await create-container
     command: docker logs -f adb-free
+  
+  - name: SQLcl window
+    init: gp sync-await database-running
+    command: | 
+      /workspace/sqlcl/bin/sql -cloudconfig adb.zip apptest/Welkom01x123@myatp_tp
+  
+  - name: MongoSH
+    init: gp sync-await database-running
+    command: |
+      mongosh 'mongodb://apptest:Welkom01x123@localhost:27017/apptest?authMechanism=PLAIN&authSource=$external&ssl=true&retryWrites=false&loadBalanced=true&tlsInsecure=true'
 
 ports:
   - port: 1521
