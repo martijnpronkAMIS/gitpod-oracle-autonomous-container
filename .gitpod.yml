@@ -1,11 +1,8 @@
 tasks:
-  - init: |
-      docker pull container-registry.oracle.com/database/adb-free:latest
-
-      # open the readme.md document in VS code.
-      gp open README.md
-
-      docker run -d 
+  - name: download and create container
+    before: |
+      docker pull container-registry.oracle.com/database/adb-free:latest-23ai
+      docker run -d \
         -p 1521:1522 \
         -p 1522:1522 \
         -p 8443:8443 \
@@ -16,17 +13,28 @@ tasks:
         --cap-add SYS_ADMIN \
         --device /dev/fuse \
         --name adb-free \
-        container-registry.oracle.com/database/adb-free:latest 
-      gp sync-done database-running
+        container-registry.oracle.com/database/adb-free:latest-23ai
 
-  - name: start container and run a session as postgres owner
+      curl --output sqlcl-latest.zip https://download.oracle.com/otn_software/java/sqldeveloper/sqlcl-latest.zip
+      unzip sqlcl-latest.zip -d /workspace/
+      rm -f sqlcl-latest.zip
+
+      sleep 60
+      
+      docker cp adb-free:/u01/app/oracle/wallets/tls_wallet adb_wallet
+      pushd adb_wallet && zip ../adb.zip * && popd
+
+      gp sync-done database-running
+    init:
+      gp open README.md
+
+  - name: start container and run a session as  owner
     init: gp sync-await database-running
     command: |
       docker start adb-free 
 
   - name: Show log
-    command: docker log -f adb-free
-
+    command: docker logs -f adb-free
 
 ports:
   - port: 1521
@@ -38,6 +46,7 @@ ports:
   - port: 8443
     onOpen: notify
     visibility: private
+    protocol: https
   - port: 27017
     onOpen: notify
     visibility: private
@@ -45,4 +54,5 @@ ports:
 vscode:
   extensions:
     - ms-dotnettools.vscode-dotnet-runtime
-    - oracledevtools
+    - oracle.oracledevtools
+    - mongodb.mongodb-vscode

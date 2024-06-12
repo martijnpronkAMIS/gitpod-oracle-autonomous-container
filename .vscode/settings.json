@@ -2,6 +2,29 @@
     "workbench.editorAssociations": 
     {
         "README.md": "vscode.markdown.preview.editor",
-    }
+    },
+    "oracledevtools.bookmarkFileFolder": "/home/gitpod/Oracle/oracle.oracledevtools",
+    "oracledevtools.download.otherFolder": "/home/gitpod/downloads",
+    "oracledevtools.connectionConfiguration.configFilesFolder": "/workspace/gitpod-oracle-autonomous-container/tls_wallet",
+    "oracledevtools.connectionConfiguration.walletFileFolder": "/workspace/gitpod-oracle-autonomous-container/tls_wallet",
+    "oracledevtools.connections": [
+        { "authenticationType": 2,
+          "dBAPrivilege": "None",
+          "userID": "APP_TEST",
+          "passwordSaved": false,
+          "dataSource": "myatp_tp_tls",
+          "connectionType": 1,
+          "tnsAdmin": "/workspace/gitpod-oracle-autonomous-container/tls_wallet",
+          "walletLocation": "/workspace/gitpod-oracle-autonomous-container/tls_wallet",
+          "useConnectionCredsFromWalletFile": false,
+          "name": "APP_TEST.myatp_tp_tls",
+          "color": "none",
+          "currentSchema": "APP_TEST",
+          "addSettingsScopeToConnectionName": false,
+          "addCurrentSchemaToConnectionName": false,
+          "filters": [],
+          "useCompatibleNamesDirectoryPath": true
+         }
+         ]
 
 }
